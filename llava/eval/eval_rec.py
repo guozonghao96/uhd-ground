@@ -145,7 +145,7 @@ if __name__ == "__main__":
                     'REC_refcocog_umd_val',
                     'REC_refcocog_umd_test',]
 
-    val_splits = ['REC_refcoco+_unc_val']
+    # val_splits = ['REC_refcoco+_unc_val']
 
     for category in val_splits:
         cur_answers = [x for x in answers if questions[x['question_id']]['category'] == category]

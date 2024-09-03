@@ -49,6 +49,6 @@ echo $FTED
 # done
 
 python -m llava.eval.eval_rec \
-    --annotation-file ./playground/data/eval/refcoco/answers/updated_llava_ref3_labels.jsonl \
+    --annotation-file ./playground/data/eval/refcoco/answers/output.jsonl \
     --question-file ./playground/data/eval/refcoco/$SPLIT.jsonl \
     --result-file ./playground/data/eval/refcoco/answers/$SPLIT/$CKPT/merge.jsonl

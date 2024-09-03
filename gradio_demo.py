@@ -196,7 +196,8 @@ def inference_fn(text, image, temperature, num_beams, max_new_tokens):
         image = check_box_and_draw(image, outputs)
         legend = generate_legend([], [])
         outputs = colorize_text([], [], outputs)
-    elif 'Please provide a description of this image. Please include the coordinates for the mentioned objects.' in text:
+    # elif 'Please provide a description of this image. Please include the coordinates for the mentioned objects.' in text:
+    elif 'Please include the coordinates for the mentioned objects.' in text:
         # gcg
         image = Image.fromarray(image)
         image_width, image_height = image.size
@@ -212,16 +213,20 @@ def inference_fn(text, image, temperature, num_beams, max_new_tokens):
 
             # import pdb; pdb.set_trace()
             phrase = re.findall(r'<ph>.*?</ph>', match)[0]
+            print(phrase)
             phrase = phrase[5:-6]
             phrases.append(phrase)
 
-            box = re.findall(r'<box>.*?</box>', match)[0]
-            box = box[7:-8].strip(' ').split(',')
+            boxes = re.findall(r'<box>.*?</box>', match)[0]
+            print(boxes)
+            boxes = boxes[7:-8].strip(' ')
             # 将提取出的字符串转换为浮点数
-            box = list(map(float, box))
-            bbox_coords = convert_to_absolute_coords(box, image_width, image_height)
-
-            image = draw_bounding_box(image, bbox_coords, outline=outline_color)
+            boxes = re.findall(r'\[.*?\]', match)
+            for box in boxes:
+                box = box[1:-1].strip(' ').split(',')
+                box = list(map(float, box))
+                bbox_coords = convert_to_absolute_coords(box, image_width, image_height)
+                image = draw_bounding_box(image, bbox_coords, outline=outline_color)
 
             # print(phrase, bbox_coords)
         
@@ -249,6 +254,10 @@ def inference_fn(text, image, temperature, num_beams, max_new_tokens):
 
         legend = generate_legend([], [])
         outputs = colorize_text([], [], outputs)
+
+    # elif 'Please include the coordinates for the mentioned objects.' in text:
+    #     # grounded vqa
+    #     # 必须卸载
 
     return outputs, legend, image
 
@@ -290,4 +299,4 @@ if __name__ == "__main__":
             gr.Image(label="image")],
         examples=examples
     )
-    demo.launch(server_name="0.0.0.0", server_port=8888)
+    demo.launch(server_name="0.0.0.0", server_port=8890)
