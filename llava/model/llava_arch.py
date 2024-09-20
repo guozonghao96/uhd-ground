@@ -417,7 +417,8 @@ class LlavaMetaForCausalLM(ABC):
                 embed_tokens_weight = mm_projector_weights['model.embed_tokens.weight']
                 assert num_new_tokens == 4, "spetial token must be '<ph>', '</ph>', '<box>', '</box>'"
                 if input_embeddings.shape == embed_tokens_weight.shape:
-                    input_embeddings[-num_new_tokens:] = embed_tokens_weight[-num_new_tokens:]
+                    # input_embeddings[-num_new_tokens:] = embed_tokens_weight[-num_new_tokens:]
+                    input_embeddings[:] = embed_tokens_weight[:]
                 else:
                     raise ValueError(f"Unexpected embed_tokens_weight shape. Pretrained: {embed_tokens_weight.shape}. Current: {input_embeddings.shape}. Numer of new tokens: {num_new_tokens}.")
 

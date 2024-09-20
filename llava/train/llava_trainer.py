@@ -240,6 +240,11 @@ class LLaVATrainer(Trainer):
             if getattr(self.args, "use_im_start_end", False):
                 keys_to_match.extend(['embed_tokens', 'embed_in'])
 
+            
+            # 增加word embeding 参数的存储
+            if getattr(self.args, "tune_word_embedding", False):
+                keys_to_match.extend(['embed_tokens', 'lm_head'])
+
             weight_to_save = get_mm_adapter_state_maybe_zero_3(self.model.named_parameters(), keys_to_match)
 
             if self.args.local_rank == 0 or self.args.local_rank == -1:
